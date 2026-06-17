@@ -1,4 +1,16 @@
 steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'build'
+    - '-t'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:$SHORT_SHA'
+    - '.'
+
+- name: 'gcr.io/cloud-builders/docker'
+  args:
+    - 'push'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:$SHORT_SHA'
+
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: bash
   args:
@@ -6,7 +18,7 @@ steps:
     - |
       gcloud compute ssh bastion-host \
       --zone us-central1-f \
-      --command="hostname"
+      --command="kubectl set image deployment/flask-app flask-app=us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:$SHORT_SHA"
 
 options:
   logging: CLOUD_LOGGING_ONLY
