@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Private GKE Demo</title>
+</head>
+<body>
+
+<h1>Private GKE Demo</h1>
+
+<form method="POST">
+    <input
+        type="text"
+        name="name"
+        placeholder="Enter Name"
+        required
+    >
+
+    <button type="submit">
+        Save
+    </button>
+</form>
+
+<hr>
+
+<h2>Visitors</h2>
+
+<ul>
+{% for visitor in visitors %}
+    <li>{{ visitor[1] }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>
