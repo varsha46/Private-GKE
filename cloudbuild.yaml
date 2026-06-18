@@ -3,13 +3,13 @@ steps:
   args:
     - 'build'
     - '-t'
-    - 'us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:$SHORT_SHA'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:latest'
     - '.'
 
 - name: 'gcr.io/cloud-builders/docker'
   args:
     - 'push'
-    - 'us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:$SHORT_SHA'
+    - 'us-central1-docker.pkg.dev/$PROJECT_ID/demo-repo/private-gke-demo:latest'
 
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: bash
@@ -19,8 +19,10 @@ steps:
       gcloud compute ssh dombalevarsha4@bastion-host \
       --zone us-central1-f \
       --command="
-      sed -i 's|IMAGE_TAG|$SHORT_SHA|g' ~/k8s/flask-deployment.yaml &&
-      kubectl apply -f ~/k8s
+      cd ~/Private-GKE &&
+      git pull &&
+      kubectl apply -f k8s/ &&
+      kubectl rollout restart deployment/flask-app
       "
 
 options:
