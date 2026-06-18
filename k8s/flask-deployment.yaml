@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: us-central1-docker.pkg.dev/varsha-499504/demo-repo/private-gke-demo:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: DB_HOST
+          value: postgres-service
+        - name: DB_NAME
+          value: demo
+        - name: DB_USER
+          value: postgres
+        - name: DB_PASSWORD
+          value: password
